@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getGithubReposPage, parseGitHubLinkHeader } from "./github-repos";
-import { getPageHref, parsePageParam } from "./pagination";
+import { getPageHref, getPaginationItems, parsePageParam } from "./pagination";
 
 const linkHeader =
   '<https://api.github.com/orgs/github/repos?sort=name&per_page=10&page=2>; rel="next", ' +
@@ -25,6 +25,41 @@ describe("github repo helpers", () => {
       next: 2,
       last: 52,
     });
+  });
+
+  it("builds compact pagination windows", () => {
+    expect(getPaginationItems(5, 52)).toEqual([
+      1,
+      "ellipsis-start",
+      3,
+      4,
+      5,
+      6,
+      7,
+      "ellipsis-end",
+      52,
+    ]);
+    expect(getPaginationItems(1, 52)).toEqual([
+      1,
+      2,
+      3,
+      "ellipsis-end",
+      52,
+    ]);
+    expect(getPaginationItems(52, 52)).toEqual([
+      1,
+      "ellipsis-start",
+      50,
+      51,
+      52,
+    ]);
+    expect(getPaginationItems(9999, 52)).toEqual([
+      1,
+      "ellipsis-start",
+      50,
+      51,
+      52,
+    ]);
   });
 
   it("fetches a repository page and exposes pagination metadata", async () => {

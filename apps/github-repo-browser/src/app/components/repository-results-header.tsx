@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 type RepositoryResultsHeaderProps = {
@@ -9,12 +10,6 @@ type RepositoryResultsHeaderProps = {
   totalPages: number | null;
 };
 
-const FOCUS_FLAG = "github-repo-browser-page-navigation";
-
-export function markRepositoryNavigation() {
-  window.sessionStorage.setItem(FOCUS_FLAG, "true");
-}
-
 export function RepositoryResultsHeader({
   currentPage,
   repoCount,
@@ -22,15 +17,18 @@ export function RepositoryResultsHeader({
   totalPages,
 }: RepositoryResultsHeaderProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const hasMountedRef = useRef(false);
+  const searchParams = useSearchParams();
+  const searchKey = searchParams?.toString() ?? "";
 
   useEffect(() => {
-    if (window.sessionStorage.getItem(FOCUS_FLAG) !== "true") {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
       return;
     }
 
-    window.sessionStorage.removeItem(FOCUS_FLAG);
     headingRef.current?.focus();
-  }, [currentPage]);
+  }, [searchKey]);
 
   const pageLabel = totalPages
     ? `Page ${currentPage} of ${totalPages}.`

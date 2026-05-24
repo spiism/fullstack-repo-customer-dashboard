@@ -37,6 +37,10 @@ npm test
 npm run build
 ```
 
+## Tests
+
+The test suite uses Vitest and React Testing Library. It covers GitHub API pagination/error parsing and the rendered repository browser pagination/error UI.
+
 ## API Used
 
 The app fetches repositories server-side from:
