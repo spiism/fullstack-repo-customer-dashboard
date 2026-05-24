@@ -45,10 +45,16 @@ index.html?apiBase=http://localhost:3001/api/v1
 
 - Root Directory: `apps/customer-web`
 - Framework Preset: `Other`
+- Install Command:
+
+```bash
+echo "No install required"
+```
+
 - Build Command:
 
 ```bash
-npm run build
+node scripts/write-config.js
 ```
 
 - Output Directory: `.`
