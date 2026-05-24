@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GitHub Repository Browser
 
-## Getting Started
+A lightweight Next.js application for browsing public repositories from a GitHub organization.
 
-First, run the development server:
+## What It Does
+
+- Fetches public repositories from the GitHub organization API.
+- Shows 10 repositories per page.
+- Supports Previous and Next pagination.
+- Displays repository name, description, visibility, language, stars, forks, and last updated date.
+- Includes loading, empty, error, and retry states.
+
+## Requirements
+
+- Node.js 20 or newer is recommended.
+- npm.
+
+## Setup
+
+```bash
+npm install
+```
+
+## Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Validate
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+```
 
-## Learn More
+## API Used
 
-To learn more about Next.js, take a look at the following resources:
+The app fetches directly from:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+https://api.github.com/orgs/github/repos?sort=name&per_page=10&page=1
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The page number changes when using pagination. No GitHub token is required for basic browsing, but unauthenticated GitHub API rate limits can still apply.
