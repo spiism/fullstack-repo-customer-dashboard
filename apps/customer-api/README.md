@@ -24,6 +24,9 @@ The default `.env.example` points at:
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/customer_dashboard?schema=public"
 PORT=3001
+WEB_ORIGIN="*"
+THROTTLE_TTL=60000
+THROTTLE_LIMIT=100
 ```
 
 Create the database before running the migration if it does not already exist:
@@ -35,7 +38,7 @@ createdb customer_dashboard
 ## API
 
 ```http
-GET /customers?page=1&limit=10
+GET /api/v1/customers?page=1&limit=10
 ```
 
 Response shape:
@@ -70,7 +73,10 @@ Pagination input is validated with Nest validation pipes:
 
 - `page` must be an integer greater than or equal to 1.
 - `limit` must be an integer from 1 to 100.
+- `search` is optional and matches name, email, company, city, or title.
 - Results are ordered by the CSV source id for stable pagination.
+
+The API also enables CORS through `WEB_ORIGIN`, returns an `x-request-id` response header, and applies a default request throttle.
 
 ## CSV Import
 
@@ -81,12 +87,18 @@ npm run import:customers
 ```
 
 The importer is idempotent. It validates required fields, normalizes empty optional fields to `null`, and upserts rows by the CSV `id` column mapped to `sourceId`.
+Upserts are grouped into small transactions so the importer avoids one transaction per row while still supporting repeatable imports.
 
 To import a different file:
 
 ```bash
 CUSTOMERS_CSV_PATH=/absolute/path/to/customers.csv npm run import:customers
 ```
+
+## Web Client
+
+A small static web client is included at `../customer-web/index.html`.
+Start the API, then open that file in a browser. It asynchronously fetches customer JSON from `http://localhost:3001/api/v1/customers`, renders a responsive list, and supports pagination and search.
 
 ## Validation
 

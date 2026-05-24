@@ -12,7 +12,7 @@ model Customer {
   sourceId  Int      @unique @map("source_id")
   firstName String   @map("first_name")
   lastName  String   @map("last_name")
-  email     String   @unique
+  email     String
   gender    String?
   ipAddress String?  @map("ip_address")
   company   String?

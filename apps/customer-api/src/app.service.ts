@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { DEFAULT_CUSTOMERS_ENDPOINT } from './app.constants';
 
 @Injectable()
 export class AppService {
@@ -6,7 +7,7 @@ export class AppService {
     return {
       name: 'Customer API',
       endpoints: {
-        customers: '/customers?page=1&limit=10',
+        customers: DEFAULT_CUSTOMERS_ENDPOINT,
       },
     };
   }

@@ -31,6 +31,7 @@ type ImportedCustomer = {
 
 const prisma = new PrismaClient();
 const csvPath = process.env.CUSTOMERS_CSV_PATH ?? 'data/customers.csv';
+const importBatchSize = 100;
 
 function nullable(value: string) {
   const trimmed = value.trim();
@@ -84,14 +85,20 @@ async function importCustomers() {
 
   const customers = rows.map(toCustomer);
 
-  for (const customer of customers) {
-    await prisma.customer.upsert({
-      where: {
-        sourceId: customer.sourceId,
-      },
-      update: customer,
-      create: customer,
-    });
+  for (let index = 0; index < customers.length; index += importBatchSize) {
+    const chunk = customers.slice(index, index + importBatchSize);
+
+    await prisma.$transaction(
+      chunk.map((customer) =>
+        prisma.customer.upsert({
+          where: {
+            sourceId: customer.sourceId,
+          },
+          update: customer,
+          create: customer,
+        }),
+      ),
+    );
   }
 
   console.log(`Imported ${customers.length} customers.`);

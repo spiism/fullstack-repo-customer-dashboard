@@ -80,9 +80,41 @@ describe('CustomersService', () => {
       skip: 10,
       take: 10,
     });
+    expect(prisma.customer.count).toHaveBeenCalledWith({});
     expect(prisma.$transaction).toHaveBeenCalledWith([
       'count-query',
       'find-query',
     ]);
+  });
+
+  it('applies a case-insensitive search filter', async () => {
+    prisma.customer.count.mockReturnValue('count-query');
+    prisma.customer.findMany.mockReturnValue('find-query');
+    prisma.$transaction.mockResolvedValue([1, [customer]]);
+
+    await service.findAll({ page: 1, limit: 10, search: 'laura' });
+
+    const expectedFilter = {
+      OR: [
+        { firstName: { contains: 'laura', mode: 'insensitive' } },
+        { lastName: { contains: 'laura', mode: 'insensitive' } },
+        { email: { contains: 'laura', mode: 'insensitive' } },
+        { company: { contains: 'laura', mode: 'insensitive' } },
+        { city: { contains: 'laura', mode: 'insensitive' } },
+        { title: { contains: 'laura', mode: 'insensitive' } },
+      ],
+    };
+
+    expect(prisma.customer.count).toHaveBeenCalledWith({
+      where: expectedFilter,
+    });
+    expect(prisma.customer.findMany).toHaveBeenCalledWith({
+      where: expectedFilter,
+      orderBy: {
+        sourceId: 'asc',
+      },
+      skip: 0,
+      take: 10,
+    });
   });
 });

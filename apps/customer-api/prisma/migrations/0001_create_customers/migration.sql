@@ -17,5 +17,3 @@ CREATE TABLE "customers" (
 );
 
 CREATE UNIQUE INDEX "customers_source_id_key" ON "customers"("source_id");
-CREATE UNIQUE INDEX "customers_email_key" ON "customers"("email");
-CREATE INDEX "customers_source_id_idx" ON "customers"("source_id");

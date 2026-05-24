@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { DEFAULT_CUSTOMERS_ENDPOINT } from './app.constants';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -19,7 +20,7 @@ describe('AppController', () => {
       expect(appController.getStatus()).toEqual({
         name: 'Customer API',
         endpoints: {
-          customers: '/customers?page=1&limit=10',
+          customers: DEFAULT_CUSTOMERS_ENDPOINT,
         },
       });
     });
