@@ -33,7 +33,7 @@ THROTTLE_LIMIT=100
 For Supabase deployments:
 
 - `DATABASE_URL` should use the Transaction pooler URI for Lambda/runtime connections. The SST config adds `pgbouncer=true` and `connection_limit=1` for Supabase pooler URLs so Prisma does not reuse prepared statements through the pooler.
-- `DIRECT_URL` should use the Direct connection URI for Prisma migrations and imports. If direct connection fails on your network, use the Session pooler URI instead.
+- `DIRECT_URL` should use the Direct connection URI for Prisma migrations and imports. It is optional for API runtime. If direct connection fails on your network, use the Session pooler URI instead.
 
 Create the database before running the migration if it does not already exist:
 

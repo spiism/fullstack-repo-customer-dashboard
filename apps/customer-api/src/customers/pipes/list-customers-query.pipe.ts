@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import { ListCustomersQueryDto } from '../dto/list-customers-query.dto';
+import type { ListCustomersQueryDto } from '../dto/list-customers-query.dto';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;

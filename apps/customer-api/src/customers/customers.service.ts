@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Customer, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { ListCustomersQueryDto } from './dto/list-customers-query.dto';
+import type { ListCustomersQueryDto } from './dto/list-customers-query.dto';
 
 type CustomerResponse = {
   id: number;
@@ -19,7 +19,11 @@ type CustomerResponse = {
 
 @Injectable()
 export class CustomersService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(
+    // Explicit token keeps DI stable in esbuild Lambda bundles.
+    @Inject(PrismaService)
+    private readonly prisma: PrismaService,
+  ) {}
 
   async findAll(query: ListCustomersQueryDto) {
     const page = query.page;

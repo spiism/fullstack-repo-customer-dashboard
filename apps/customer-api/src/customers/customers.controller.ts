@@ -1,11 +1,12 @@
 import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { CustomersService } from './customers.service';
-import { ListCustomersQueryDto } from './dto/list-customers-query.dto';
+import type { ListCustomersQueryDto } from './dto/list-customers-query.dto';
 import { ListCustomersQueryPipe } from './pipes/list-customers-query.pipe';
 
 @Controller('customers')
 export class CustomersController {
   constructor(
+    // Explicit token keeps DI stable in esbuild Lambda bundles.
     @Inject(CustomersService)
     private readonly customersService: CustomersService,
   ) {}

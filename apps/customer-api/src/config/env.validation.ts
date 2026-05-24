@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 export const envValidationSchema = Joi.object({
   DATABASE_URL: Joi.string().required(),
-  DIRECT_URL: Joi.string().required(),
+  DIRECT_URL: Joi.string().optional(),
   PORT: Joi.number().port().default(3001),
   WEB_ORIGIN: Joi.string().default('*'),
   THROTTLE_TTL: Joi.number().integer().positive().default(60000),

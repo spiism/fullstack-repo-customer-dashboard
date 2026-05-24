@@ -3,7 +3,11 @@ import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(@Inject(AppService) private readonly appService: AppService) {}
+  constructor(
+    // Explicit token keeps DI stable in esbuild Lambda bundles.
+    @Inject(AppService)
+    private readonly appService: AppService,
+  ) {}
 
   @Get()
   getStatus() {
