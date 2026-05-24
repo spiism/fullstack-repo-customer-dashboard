@@ -25,6 +25,8 @@ declare const process: {
   env: Record<string, string | undefined>;
 };
 
+const SUPABASE_POOLER_HOST_SUFFIX = '.pooler.supabase.com';
+
 function requiredEnv(name: string) {
   const value = process.env[name];
 
@@ -37,11 +39,20 @@ function requiredEnv(name: string) {
   return value;
 }
 
+function isSupabasePoolerHost(hostname: string) {
+  return (
+    hostname === 'pooler.supabase.com' ||
+    hostname.substring(
+      hostname.length - SUPABASE_POOLER_HOST_SUFFIX.length,
+    ) === SUPABASE_POOLER_HOST_SUFFIX
+  );
+}
+
 function runtimeDatabaseUrl() {
   const value = requiredEnv('DATABASE_URL');
   const url = new URL(value);
 
-  if (url.hostname.endsWith('pooler.supabase.com')) {
+  if (isSupabasePoolerHost(url.hostname)) {
     url.searchParams.set('pgbouncer', 'true');
     url.searchParams.set('connection_limit', '1');
   }
