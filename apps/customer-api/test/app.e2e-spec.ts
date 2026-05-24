@@ -136,6 +136,16 @@ describe('Customer API (e2e)', () => {
       .expect(400);
   });
 
+  it('/api/v1/customers handles CORS preflight', () => {
+    return request(app.getHttpServer())
+      .options('/api/v1/customers')
+      .set('Origin', 'https://customer-web.example')
+      .set('Access-Control-Request-Method', 'GET')
+      .expect(204)
+      .expect('access-control-allow-origin', '*')
+      .expect('access-control-allow-methods', 'GET,OPTIONS');
+  });
+
   afterEach(async () => {
     await app.close();
   });
