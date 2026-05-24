@@ -8,6 +8,7 @@
   --muted: #656d76;
   --accent: #0969da;
   --accent-strong: #0757b8;
+  --accent-soft: rgba(9, 105, 218, 0.1);
   --success: #1a7f37;
   --danger: #cf222e;
   --shadow: 0 12px 32px rgba(31, 35, 40, 0.08);
@@ -25,6 +26,7 @@ body {
   margin: 0;
   color: var(--text);
   background: var(--bg);
+  line-height: 1.45;
 }
 
 button,
@@ -46,6 +48,19 @@ button {
 button:hover:not(:disabled) {
   border-color: var(--border-strong);
   background: #f3f4f6;
+}
+
+.primary-button,
+.nav-button-primary {
+  border-color: rgba(9, 105, 218, 0.42);
+  color: #ffffff;
+  background: var(--accent);
+}
+
+.primary-button:hover:not(:disabled),
+.nav-button-primary:hover:not(:disabled) {
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
 }
 
 button:disabled {
@@ -89,8 +104,8 @@ p {
 
 h1 {
   margin-bottom: 0;
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  line-height: 1;
+  font-size: 2.4rem;
+  line-height: 1.05;
 }
 
 h2 {
@@ -154,7 +169,7 @@ input {
 
 select {
   margin-top: 8px;
-  padding: 0 32px 0 10px;
+  padding: 0 34px 0 10px;
 }
 
 .results-header {
@@ -171,22 +186,41 @@ select {
 }
 
 .pagination {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+}
+
+.pagination-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(86px, max-content));
   gap: 8px;
 }
 
-#pageIndicator {
-  display: inline-grid;
-  min-height: 40px;
-  min-width: 116px;
-  place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 0 12px;
+.nav-button {
+  min-width: 86px;
+}
+
+.page-jump {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--muted);
-  background: var(--surface);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.page-jump select {
+  min-width: 96px;
+  margin-top: 0;
+}
+
+#pageIndicator {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  white-space: nowrap;
+  color: var(--muted);
 }
 
 .customer-list {
@@ -269,6 +303,7 @@ select {
   .results-header,
   .toolbar,
   .customer-item {
+    display: grid;
     grid-template-columns: 1fr;
   }
 
@@ -282,16 +317,64 @@ select {
   }
 
   .pagination {
-    justify-content: stretch;
+    justify-items: stretch;
   }
 
-  .pagination button,
-  #pageIndicator {
-    flex: 1 1 120px;
+  .pagination-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nav-button {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .page-jump {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .page-jump select {
+    width: 100%;
   }
 
   .customer-contact {
     justify-content: flex-start;
     text-align: left;
+  }
+}
+
+@media (max-width: 520px) {
+  .shell {
+    width: min(100% - 16px, 1120px);
+  }
+
+  .header-layout {
+    gap: 14px;
+    padding: 18px 0;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.18rem;
+  }
+
+  .content {
+    padding: 18px 0 36px;
+  }
+
+  .toolbar,
+  .customer-item,
+  .empty-state,
+  .error-state {
+    border-radius: 6px;
+    padding: 12px;
+  }
+
+  .api-status {
+    justify-self: start;
   }
 }

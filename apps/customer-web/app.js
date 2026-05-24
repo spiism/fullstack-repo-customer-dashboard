@@ -26,6 +26,7 @@ const elements = {
   limitSelect: document.querySelector('#limitSelect'),
   nextPageButton: document.querySelector('#nextPageButton'),
   pageIndicator: document.querySelector('#pageIndicator'),
+  pageSelect: document.querySelector('#pageSelect'),
   previousPageButton: document.querySelector('#previousPageButton'),
   resultsSummary: document.querySelector('#resultsSummary'),
   resultsTitle: document.querySelector('#resultsTitle'),
@@ -63,6 +64,7 @@ function setLoading(isLoading) {
   elements.nextPageButton.disabled = isLoading || state.page >= state.totalPages;
   elements.lastPageButton.disabled = isLoading || state.page >= state.totalPages;
   elements.limitSelect.disabled = isLoading;
+  elements.pageSelect.disabled = isLoading || state.totalPages <= 1;
   elements.searchInput.disabled = isLoading;
   elements.searchForm.querySelector('button').disabled = isLoading;
 }
@@ -122,6 +124,7 @@ function renderCustomers(customers) {
 }
 
 function renderMeta(meta) {
+  const totalPages = Math.max(meta.totalPages, 1);
   const first = meta.total === 0 ? 0 : (meta.page - 1) * meta.limit + 1;
   const last = Math.min(meta.page * meta.limit, meta.total);
   const searchText = state.search ? ` matching "${state.search}"` : '';
@@ -130,12 +133,25 @@ function renderMeta(meta) {
     meta.total === 0
       ? `No customers${searchText}.`
       : `Showing customers ${first}-${last} of ${meta.total}${searchText}.`;
-  elements.pageIndicator.textContent = `Page ${meta.page} of ${meta.totalPages}`;
+  elements.pageIndicator.textContent = `of ${totalPages}`;
+}
+
+function renderPageOptions() {
+  clearChildren(elements.pageSelect);
+
+  for (let page = 1; page <= state.totalPages; page += 1) {
+    const option = document.createElement('option');
+    option.value = String(page);
+    option.textContent = String(page);
+    option.selected = page === state.page;
+    elements.pageSelect.appendChild(option);
+  }
 }
 
 function renderPagination(meta) {
   state.totalPages = Math.max(meta.totalPages, 1);
   state.page = meta.page;
+  renderPageOptions();
   setLoading(false);
 }
 
@@ -185,6 +201,11 @@ elements.searchForm.addEventListener('submit', (event) => {
 elements.limitSelect.addEventListener('change', () => {
   state.limit = Number(elements.limitSelect.value);
   state.page = 1;
+  void loadCustomers();
+});
+
+elements.pageSelect.addEventListener('change', () => {
+  state.page = Number(elements.pageSelect.value);
   void loadCustomers();
 });
 

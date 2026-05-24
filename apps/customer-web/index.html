@@ -29,7 +29,7 @@
               autocomplete="off"
               placeholder="Name, company, city, title, email"
             />
-            <button type="submit">Search</button>
+            <button class="primary-button" type="submit">Search</button>
           </div>
         </form>
 
@@ -49,11 +49,17 @@
           <p id="resultsSummary" aria-live="polite">Loading customers.</p>
         </div>
         <nav class="pagination" aria-label="Customer pagination">
-          <button id="firstPageButton" type="button">First</button>
-          <button id="previousPageButton" type="button">Previous</button>
-          <span id="pageIndicator">Page 1</span>
-          <button id="nextPageButton" type="button">Next</button>
-          <button id="lastPageButton" type="button">Last</button>
+          <div class="pagination-buttons">
+            <button class="nav-button" id="firstPageButton" type="button">First</button>
+            <button class="nav-button" id="previousPageButton" type="button">Previous</button>
+            <button class="nav-button nav-button-primary" id="nextPageButton" type="button">Next</button>
+            <button class="nav-button nav-button-primary" id="lastPageButton" type="button">Last</button>
+          </div>
+          <div class="page-jump">
+            <label for="pageSelect">Page</label>
+            <select id="pageSelect" name="page"></select>
+            <span id="pageIndicator">of 1</span>
+          </div>
         </nav>
       </section>
 
