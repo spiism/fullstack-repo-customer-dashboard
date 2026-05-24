@@ -1,24 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-
-type GitHubRepo = {
-  id: number;
-  name: string;
-  full_name: string;
-  html_url: string;
-  description: string | null;
-  private: boolean;
-  fork: boolean;
-  language: string | null;
-  stargazers_count: number;
-  forks_count: number;
-  updated_at: string;
-};
-
-const PAGE_SIZE = 10;
-const MAX_PAGE = 3;
-const GITHUB_REPOS_URL = "https://api.github.com/orgs/github/repos";
+import { useMemo, useState } from "react";
+import {
+  MAX_PAGE,
+  PAGE_SIZE,
+  type GitHubRepo,
+  useGithubRepos,
+} from "./use-github-repos";
 
 const numberFormatter = new Intl.NumberFormat("en", {
   notation: "compact",
@@ -41,15 +29,11 @@ function formatUpdatedDate(value: string) {
 
 export default function Home() {
   const [page, setPage] = useState(1);
-  const [reposByPage, setReposByPage] = useState<Record<number, GitHubRepo[]>>(
-    {},
-  );
-  const [errorsByPage, setErrorsByPage] = useState<Record<number, string>>({});
-  const [retryKey, setRetryKey] = useState(0);
-
-  const repos = reposByPage[page] ?? [];
-  const error = errorsByPage[page] ?? null;
-  const isLoading = repos.length === 0 && !error;
+  const { repos, status, error, retry } = useGithubRepos(page);
+  const isLoading = status === "idle" || status === "loading";
+  const isError = status === "error";
+  const isEmpty = status === "success" && repos.length === 0;
+  const hasRepos = status === "success" && repos.length > 0;
   const hasPreviousPage = page > 1;
   const hasNextPage = page < MAX_PAGE;
 
@@ -60,74 +44,12 @@ export default function Home() {
     return repos.length > 0 ? `${first}-${last}` : "0";
   }, [page, repos.length]);
 
-  useEffect(() => {
-    if (reposByPage[page] || errorsByPage[page]) {
-      return;
-    }
-
-    const controller = new AbortController();
-
-    async function fetchRepos() {
-      const params = new URLSearchParams({
-        sort: "name",
-        per_page: String(PAGE_SIZE),
-        page: String(page),
-      });
-
-      try {
-        const response = await fetch(`${GITHUB_REPOS_URL}?${params}`, {
-          headers: {
-            Accept: "application/vnd.github+json",
-          },
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`GitHub responded with ${response.status}.`);
-        }
-
-        const data = (await response.json()) as GitHubRepo[];
-        setReposByPage((current) => ({ ...current, [page]: data }));
-      } catch (fetchError) {
-        if (controller.signal.aborted) {
-          return;
-        }
-
-        setErrorsByPage((current) => ({
-          ...current,
-          [page]:
-            fetchError instanceof Error
-              ? fetchError.message
-              : "Unable to load repositories.",
-        }));
-      }
-    }
-
-    void fetchRepos();
-
-    return () => controller.abort();
-  }, [errorsByPage, page, reposByPage, retryKey]);
-
   function goToPreviousPage() {
     setPage((currentPage) => Math.max(1, currentPage - 1));
   }
 
   function goToNextPage() {
     setPage((currentPage) => Math.min(MAX_PAGE, currentPage + 1));
-  }
-
-  function retryFetch() {
-    setReposByPage((current) => {
-      const next = { ...current };
-      delete next[page];
-      return next;
-    });
-    setErrorsByPage((current) => {
-      const next = { ...current };
-      delete next[page];
-      return next;
-    });
-    setRetryKey((current) => current + 1);
   }
 
   return (
@@ -161,6 +83,7 @@ export default function Home() {
 
       <section
         aria-labelledby="repository-list-heading"
+        aria-busy={isLoading}
         className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8"
       >
         <div className="mb-4 flex flex-col gap-3 border-b border-[#d0d7de] pb-4 sm:flex-row sm:items-end sm:justify-between">
@@ -175,7 +98,10 @@ export default function Home() {
               Showing {repoRange} of at least {PAGE_SIZE * MAX_PAGE} results.
             </p>
           </div>
-          <div className="flex items-center gap-2" aria-label="Pagination">
+          <nav
+            aria-label="Repository pagination"
+            className="flex items-center gap-2"
+          >
             <button
               className="h-9 rounded-md border border-[#d0d7de] bg-white px-3 text-sm font-medium text-[#0969da] hover:bg-[#f6f8fa] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-[#8c959f] disabled:opacity-70"
               disabled={!hasPreviousPage || isLoading}
@@ -195,10 +121,10 @@ export default function Home() {
             >
               Next
             </button>
-          </div>
+          </nav>
         </div>
 
-        {error ? (
+        {isError ? (
           <div
             className="rounded-md border border-[#f85149] bg-white p-5"
             role="alert"
@@ -206,10 +132,12 @@ export default function Home() {
             <h3 className="text-base font-semibold text-[#cf222e]">
               Repositories could not be loaded.
             </h3>
-            <p className="mt-2 text-sm leading-6 text-[#57606a]">{error}</p>
+            <p className="mt-2 text-sm leading-6 text-[#57606a]">
+              {error ?? "Unable to load repositories."}
+            </p>
             <button
               className="mt-4 h-9 rounded-md border border-[#d0d7de] bg-[#2da44e] px-3 text-sm font-medium text-white hover:bg-[#2c974b] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2"
-              onClick={retryFetch}
+              onClick={retry}
               type="button"
             >
               Retry
@@ -217,9 +145,9 @@ export default function Home() {
           </div>
         ) : null}
 
-        {!error && isLoading ? <RepositoryLoadingList /> : null}
+        {isLoading ? <RepositoryLoadingList /> : null}
 
-        {!error && !isLoading && repos.length === 0 ? (
+        {isEmpty ? (
           <div className="rounded-md border border-[#d0d7de] bg-white p-5">
             <p className="text-sm text-[#57606a]">
               No repositories were returned for this page.
@@ -227,7 +155,7 @@ export default function Home() {
           </div>
         ) : null}
 
-        {!error && !isLoading && repos.length > 0 ? (
+        {hasRepos ? (
           <ul className="divide-y divide-[#d0d7de] rounded-md border border-[#d0d7de] bg-white">
             {repos.map((repo) => (
               <RepositoryListItem key={repo.id} repo={repo} />
