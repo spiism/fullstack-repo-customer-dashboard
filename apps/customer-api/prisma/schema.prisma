@@ -11,8 +11,8 @@ datasource db {
 model Customer {
   id        Int      @id @default(autoincrement())
   sourceId  Int      @unique @map("source_id")
-  firstName String   @map("first_name")
-  lastName  String   @map("last_name")
+  firstName String?  @map("first_name")
+  lastName  String?  @map("last_name")
   email     String
   gender    String?
   ipAddress String?  @map("ip_address")

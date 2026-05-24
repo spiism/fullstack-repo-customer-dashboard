@@ -92,8 +92,9 @@ The CSV file lives at `data/customers.csv`.
 npm run import:customers
 ```
 
-The importer is idempotent. It validates required fields, normalizes empty optional fields to `null`, and upserts rows by the CSV `id` column mapped to `sourceId`.
+The importer is idempotent. It validates required identifiers, normalizes empty CSV fields to `null`, and upserts rows by the CSV `id` column mapped to `sourceId`.
 Upserts are grouped into small transactions so the importer avoids one transaction per row while still supporting repeatable imports.
+When `DIRECT_URL` is set, the importer uses it instead of the runtime pooler URL so local imports do not run through the transaction pooler.
 
 To import a different file:
 

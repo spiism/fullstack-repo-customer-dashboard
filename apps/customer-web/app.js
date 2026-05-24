@@ -93,7 +93,9 @@ function renderCustomers(customers) {
     item.className = 'customer-item';
 
     const summary = document.createElement('div');
-    const name = `${customer.firstName} ${customer.lastName}`;
+    const name =
+      [customer.firstName, customer.lastName].filter(Boolean).join(' ') ||
+      customer.email;
     appendText(summary, 'h3', name, 'customer-name');
     appendText(summary, 'p', customer.title || 'No title listed', 'customer-role');
 

@@ -1,8 +1,8 @@
 CREATE TABLE "customers" (
   "id" SERIAL NOT NULL,
   "source_id" INTEGER NOT NULL,
-  "first_name" TEXT NOT NULL,
-  "last_name" TEXT NOT NULL,
+  "first_name" TEXT,
+  "last_name" TEXT,
   "email" TEXT NOT NULL,
   "gender" TEXT,
   "ip_address" TEXT,

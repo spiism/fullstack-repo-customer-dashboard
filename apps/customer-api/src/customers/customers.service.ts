@@ -6,8 +6,8 @@ import { ListCustomersQueryDto } from './dto/list-customers-query.dto';
 type CustomerResponse = {
   id: number;
   sourceId: number;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
   gender: string | null;
   ipAddress: string | null;

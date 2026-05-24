@@ -18,8 +18,8 @@ type CustomerCsvRow = {
 
 type ImportedCustomer = {
   sourceId: number;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
   gender: string | null;
   ipAddress: string | null;
@@ -29,7 +29,16 @@ type ImportedCustomer = {
   website: string | null;
 };
 
-const prisma = new PrismaClient();
+const importDatabaseUrl = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
+const prisma = new PrismaClient({
+  datasources: importDatabaseUrl
+    ? {
+        db: {
+          url: importDatabaseUrl,
+        },
+      }
+    : undefined,
+});
 const csvPath = process.env.CUSTOMERS_CSV_PATH ?? 'data/customers.csv';
 const importBatchSize = 100;
 
@@ -63,8 +72,8 @@ function toCustomer(row: CustomerCsvRow, index: number): ImportedCustomer {
 
   return {
     sourceId,
-    firstName: required(row.first_name, 'first_name', rowNumber),
-    lastName: required(row.last_name, 'last_name', rowNumber),
+    firstName: nullable(row.first_name),
+    lastName: nullable(row.last_name),
     email,
     gender: nullable(row.gender),
     ipAddress: nullable(row.ip_address),
