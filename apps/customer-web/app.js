@@ -112,8 +112,9 @@ function renderCustomers(customers) {
     contact.className = 'customer-contact';
 
     const email = document.createElement('a');
-    email.href = `mailto:${customer.email}`;
-    email.textContent = customer.email;
+    const emailAddress = customer.email;
+    email.href = `mailto:${encodeURIComponent(emailAddress)}`;
+    email.textContent = emailAddress;
     contact.appendChild(email);
 
     appendText(contact, 'span', customer.ipAddress || 'No IP address');
