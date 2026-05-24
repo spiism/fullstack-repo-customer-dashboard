@@ -1,4 +1,29 @@
-/// <reference path="./.sst/platform/config.d.ts" />
+type SstAppInput = {
+  stage?: string;
+};
+
+type SstApiGatewayV2 = {
+  url: string;
+  route(path: string, args: Record<string, unknown>): void;
+};
+
+declare const $config: (config: {
+  app(input?: SstAppInput): Record<string, unknown>;
+  run(): Promise<Record<string, unknown>> | Record<string, unknown>;
+}) => unknown;
+
+declare const sst: {
+  aws: {
+    ApiGatewayV2: new (
+      name: string,
+      args?: Record<string, unknown>,
+    ) => SstApiGatewayV2;
+  };
+};
+
+declare const process: {
+  env: Record<string, string | undefined>;
+};
 
 function requiredEnv(name: string) {
   const value = process.env[name];
@@ -40,6 +65,7 @@ export default $config({
   async run() {
     const api = new sst.aws.ApiGatewayV2('CustomerApi', {
       cors: {
+        // Demo only; restrict this before production.
         allowOrigins: ['*'],
         allowMethods: ['GET', 'OPTIONS'],
         allowHeaders: ['*'],

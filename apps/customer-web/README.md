@@ -19,11 +19,13 @@ By default the page calls:
 http://localhost:3001/api/v1
 ```
 
-For a Vercel test deployment, update `config.js` with the deployed SST/API Gateway URL:
+For a local one-off test, update `config.js` with the deployed SST/API Gateway URL:
 
 ```js
 window.CUSTOMER_API_BASE_URL = "https://your-api-url.example.com/api/v1";
 ```
+
+For Vercel, set `CUSTOMER_API_BASE_URL` as a project environment variable and generate `config.js` during the build.
 
 For a locked-down production API, use the generated Vercel URL as the backend CORS origin:
 
@@ -43,5 +45,18 @@ index.html?apiBase=http://localhost:3001/api/v1
 
 - Root Directory: `apps/customer-web`
 - Framework Preset: `Other`
-- Build Command: empty
+- Build Command:
+
+```bash
+printf 'window.CUSTOMER_API_BASE_URL = "%s";\n' "$CUSTOMER_API_BASE_URL" > config.js
+```
+
 - Output Directory: `.`
+
+Vercel environment variable:
+
+```text
+CUSTOMER_API_BASE_URL=https://your-api-url.example.com/api/v1
+```
+
+The API URL will still be visible to anyone who opens the deployed web app and inspects browser network requests. The env var keeps it out of git; it does not make the API private.
