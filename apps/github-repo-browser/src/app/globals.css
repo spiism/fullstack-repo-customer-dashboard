@@ -8,6 +8,18 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-github-accent: #0969da;
+  --color-github-border: #d0d7de;
+  --color-github-canvas: #f6f8fa;
+  --color-github-danger: #cf222e;
+  --color-github-danger-border: #f85149;
+  --color-github-fg: #24292f;
+  --color-github-hover: #f3f4f6;
+  --color-github-muted: #57606a;
+  --color-github-skeleton: #d8dee4;
+  --color-github-subtle: #8c959f;
+  --color-github-success: #2da44e;
+  --color-github-success-hover: #2c974b;
   --font-sans: Arial, Helvetica, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
