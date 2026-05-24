@@ -23,11 +23,17 @@ The default `.env.example` points at:
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/customer_dashboard?schema=public"
+DIRECT_URL="postgresql://postgres:postgres@localhost:5432/customer_dashboard?schema=public"
 PORT=3001
 WEB_ORIGIN="*"
 THROTTLE_TTL=60000
 THROTTLE_LIMIT=100
 ```
+
+For Supabase deployments:
+
+- `DATABASE_URL` should use the Transaction pooler URI for Lambda/runtime connections.
+- `DIRECT_URL` should use the Direct connection URI for Prisma migrations and imports. If direct connection fails on your network, use the Session pooler URI instead.
 
 Create the database before running the migration if it does not already exist:
 
