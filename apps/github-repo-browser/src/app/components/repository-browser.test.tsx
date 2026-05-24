@@ -44,6 +44,15 @@ describe("RepositoryBrowser", () => {
       "href",
       "/?page=3",
     );
+    expect(screen.getByRole("link", { name: "Last" })).toHaveAttribute(
+      "href",
+      "/?page=52",
+    );
+    expect(screen.getByRole("link", { name: "Go to page 52" })).toHaveAttribute(
+      "href",
+      "/?page=52",
+    );
+    expect(screen.getByText("2")).toHaveAttribute("aria-current", "page");
   });
 
   it("renders accessible error state with retry link", () => {
