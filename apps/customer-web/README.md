@@ -48,7 +48,7 @@ index.html?apiBase=http://localhost:3001/api/v1
 - Build Command:
 
 ```bash
-printf 'window.CUSTOMER_API_BASE_URL = "%s";\n' "$CUSTOMER_API_BASE_URL" > config.js
+npm run build
 ```
 
 - Output Directory: `.`
