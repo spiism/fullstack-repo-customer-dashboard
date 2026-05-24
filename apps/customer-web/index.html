@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Customer Directory</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell header-layout">
+        <div>
+          <p class="eyebrow">Customer API</p>
+          <h1>Customer Directory</h1>
+        </div>
+        <p class="api-status" id="apiStatus" aria-live="polite">Ready</p>
+      </div>
+    </header>
+
+    <main class="shell content">
+      <section class="toolbar" aria-label="Customer filters">
+        <form class="search-form" id="searchForm">
+          <label for="searchInput">Search customers</label>
+          <div class="search-row">
+            <input
+              id="searchInput"
+              name="search"
+              type="search"
+              autocomplete="off"
+              placeholder="Name, company, city, title, email"
+            />
+            <button type="submit">Search</button>
+          </div>
+        </form>
+
+        <label class="limit-field" for="limitSelect">
+          Rows
+          <select id="limitSelect" name="limit">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="results-header" aria-labelledby="resultsTitle">
+        <div>
+          <h2 id="resultsTitle" tabindex="-1">Customers</h2>
+          <p id="resultsSummary" aria-live="polite">Loading customers.</p>
+        </div>
+        <nav class="pagination" aria-label="Customer pagination">
+          <button id="firstPageButton" type="button">First</button>
+          <button id="previousPageButton" type="button">Previous</button>
+          <span id="pageIndicator">Page 1</span>
+          <button id="nextPageButton" type="button">Next</button>
+          <button id="lastPageButton" type="button">Last</button>
+        </nav>
+      </section>
+
+      <ul class="customer-list" id="customerList" aria-label="Customer list"></ul>
+
+      <p class="empty-state" id="emptyState" hidden>No customers found.</p>
+      <p class="error-state" id="errorState" role="alert" hidden></p>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
