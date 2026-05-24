@@ -55,18 +55,18 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f6f8fa] text-[#24292f]">
       <section className="border-b border-[#d0d7de] bg-white">
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-5 px-4 py-6 sm:gap-6 sm:px-6 sm:py-8 lg:px-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between md:items-center">
+            <div className="min-w-0">
               <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[#57606a]">
                 GitHub organization
               </p>
-              <h1 className="mt-2 text-3xl font-semibold text-[#0969da]">
+              <h1 className="mt-2 break-words text-2xl font-semibold text-[#0969da] sm:text-3xl">
                 github repositories
               </h1>
             </div>
             <a
-              className="inline-flex h-10 items-center justify-center rounded-md border border-[#d0d7de] bg-[#f6f8fa] px-4 text-sm font-medium text-[#24292f] hover:bg-[#f3f4f6] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2"
+              className="inline-flex h-10 w-full items-center justify-center rounded-md border border-[#d0d7de] bg-[#f6f8fa] px-4 text-sm font-medium text-[#24292f] hover:bg-[#f3f4f6] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2 sm:w-auto sm:shrink-0"
               href="https://github.com/github"
               rel="noreferrer"
               target="_blank"
@@ -74,7 +74,7 @@ export default function Home() {
               View organization
             </a>
           </div>
-          <p className="max-w-2xl text-base leading-7 text-[#57606a]">
+          <p className="max-w-2xl text-sm leading-6 text-[#57606a] sm:text-base sm:leading-7">
             Browse the first 30 public repositories from GitHub&apos;s
             organization listing, sorted by repository name.
           </p>
@@ -84,10 +84,10 @@ export default function Home() {
       <section
         aria-labelledby="repository-list-heading"
         aria-busy={isLoading}
-        className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8"
+        className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
       >
-        <div className="mb-4 flex flex-col gap-3 border-b border-[#d0d7de] pb-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
+        <div className="mb-4 flex flex-col gap-4 border-b border-[#d0d7de] pb-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
             <h2
               id="repository-list-heading"
               className="text-xl font-semibold text-[#24292f]"
@@ -100,10 +100,10 @@ export default function Home() {
           </div>
           <nav
             aria-label="Repository pagination"
-            className="flex items-center gap-2"
+            className="grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 sm:w-auto sm:grid-cols-[auto_auto_auto]"
           >
             <button
-              className="h-9 rounded-md border border-[#d0d7de] bg-white px-3 text-sm font-medium text-[#0969da] hover:bg-[#f6f8fa] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-[#8c959f] disabled:opacity-70"
+              className="h-9 min-w-0 rounded-md border border-[#d0d7de] bg-white px-2 text-sm font-medium text-[#0969da] hover:bg-[#f6f8fa] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-[#8c959f] disabled:opacity-70 sm:px-3"
               disabled={!hasPreviousPage || isLoading}
               onClick={goToPreviousPage}
               type="button"
@@ -114,7 +114,7 @@ export default function Home() {
               Page {page} of {MAX_PAGE}
             </span>
             <button
-              className="h-9 rounded-md border border-[#d0d7de] bg-white px-3 text-sm font-medium text-[#0969da] hover:bg-[#f6f8fa] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-[#8c959f] disabled:opacity-70"
+              className="h-9 min-w-0 rounded-md border border-[#d0d7de] bg-white px-2 text-sm font-medium text-[#0969da] hover:bg-[#f6f8fa] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2 disabled:cursor-not-allowed disabled:text-[#8c959f] disabled:opacity-70 sm:px-3"
               disabled={!hasNextPage || isLoading}
               onClick={goToNextPage}
               type="button"
@@ -169,11 +169,11 @@ export default function Home() {
 
 function RepositoryListItem({ repo }: { repo: GitHubRepo }) {
   return (
-    <li className="p-5">
+    <li className="p-4 sm:p-5">
       <article className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-lg font-semibold leading-7">
+            <h3 className="min-w-0 text-base font-semibold leading-7 sm:text-lg">
               <a
                 className="break-words text-[#0969da] hover:underline focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2"
                 href={repo.html_url}
@@ -197,16 +197,16 @@ function RepositoryListItem({ repo }: { repo: GitHubRepo }) {
             {repo.description || "No description provided."}
           </p>
 
-          <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-[#57606a]">
+          <dl className="mt-4 grid gap-x-5 gap-y-2 text-xs text-[#57606a] min-[420px]:grid-cols-2 sm:flex sm:flex-wrap">
             {repo.language ? (
               <div className="flex items-center gap-1.5">
                 <dt className="sr-only">Primary language</dt>
-                <dd className="flex items-center gap-1.5">
+                <dd className="flex min-w-0 items-center gap-1.5">
                   <span
                     aria-hidden="true"
-                    className="h-3 w-3 rounded-full bg-[#0969da]"
+                    className="h-3 w-3 shrink-0 rounded-full bg-[#0969da]"
                   />
-                  {repo.language}
+                  <span className="truncate">{repo.language}</span>
                 </dd>
               </div>
             ) : null}
@@ -237,11 +237,11 @@ function RepositoryLoadingList() {
       role="status"
     >
       {Array.from({ length: PAGE_SIZE }, (_, index) => (
-        <div className="p-5" key={index}>
-          <div className="h-5 w-44 rounded-md bg-[#d8dee4]" />
+        <div className="p-4 sm:p-5" key={index}>
+          <div className="h-5 w-36 rounded-md bg-[#d8dee4] sm:w-44" />
           <div className="mt-3 h-4 w-full max-w-xl rounded-md bg-[#d8dee4]" />
           <div className="mt-2 h-4 w-2/3 max-w-lg rounded-md bg-[#d8dee4]" />
-          <div className="mt-4 flex gap-3">
+          <div className="mt-4 grid grid-cols-2 gap-3 min-[420px]:flex">
             <div className="h-3 w-20 rounded-md bg-[#d8dee4]" />
             <div className="h-3 w-16 rounded-md bg-[#d8dee4]" />
             <div className="h-3 w-24 rounded-md bg-[#d8dee4]" />
