@@ -6,7 +6,7 @@ A lightweight Next.js application for browsing public repositories from a GitHub
 
 - Fetches public repositories from the GitHub organization API.
 - Shows 10 repositories per page.
-- Supports Previous and Next pagination.
+- Supports shareable Previous and Next pagination through the `page` query parameter.
 - Displays repository name, description, visibility, language, stars, forks, and last updated date.
 - Includes loading, empty, error, and retry states.
 
@@ -33,15 +33,16 @@ Open `http://localhost:3000`.
 
 ```bash
 npm run lint
+npm test
 npm run build
 ```
 
 ## API Used
 
-The app fetches directly from:
+The app fetches repositories server-side from:
 
 ```text
 https://api.github.com/orgs/github/repos?sort=name&per_page=10&page=1
 ```
 
-The page number changes when using pagination. No GitHub token is required for basic browsing, but unauthenticated GitHub API rate limits can still apply.
+The page number changes through the `page` query parameter when using pagination. No GitHub token is required for basic browsing, but unauthenticated GitHub API rate limits can still apply.
