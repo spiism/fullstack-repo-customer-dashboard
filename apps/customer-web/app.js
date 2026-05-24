@@ -1,6 +1,12 @@
 const params = new URLSearchParams(window.location.search);
+const configuredApiBaseUrl =
+  typeof window.CUSTOMER_API_BASE_URL === 'string'
+    ? window.CUSTOMER_API_BASE_URL.trim()
+    : '';
+const queryApiBaseUrl = params.get('apiBase')?.trim() ?? '';
 const apiBaseUrl =
-  params.get('apiBase')?.replace(/\/$/, '') || 'http://localhost:3001/api/v1';
+  (configuredApiBaseUrl || queryApiBaseUrl || 'http://localhost:3001/api/v1')
+    .replace(/\/$/, '');
 
 const state = {
   page: 1,
