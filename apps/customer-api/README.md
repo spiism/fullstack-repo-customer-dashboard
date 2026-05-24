@@ -32,7 +32,7 @@ THROTTLE_LIMIT=100
 
 For Supabase deployments:
 
-- `DATABASE_URL` should use the Transaction pooler URI for Lambda/runtime connections.
+- `DATABASE_URL` should use the Transaction pooler URI for Lambda/runtime connections. The SST config adds `pgbouncer=true` and `connection_limit=1` for Supabase pooler URLs so Prisma does not reuse prepared statements through the pooler.
 - `DIRECT_URL` should use the Direct connection URI for Prisma migrations and imports. If direct connection fails on your network, use the Session pooler URI instead.
 
 Create the database before running the migration if it does not already exist:
@@ -106,6 +106,23 @@ CUSTOMERS_CSV_PATH=/absolute/path/to/customers.csv npm run import:customers
 
 A small static web client is included at `../customer-web/index.html`.
 Start the API, then open that file in a browser. It asynchronously fetches customer JSON from `http://localhost:3001/api/v1/customers`, renders a responsive list, and supports pagination and search.
+
+## SST Deployment
+
+The repo root includes `sst.config.ts` for deploying the Nest API as a single Lambda behind API Gateway HTTP API.
+The function package copies the generated Prisma client into Lambda, so run `npm run db:generate` after schema changes and before deploy.
+API Gateway owns browser CORS for the deployed endpoint and allows `GET` and `OPTIONS` from any origin for the demo web client.
+
+From the repo root:
+
+```bash
+set -a
+source apps/customer-api/.env
+set +a
+SST_TELEMETRY_DISABLED=1 npx sst@4.14.3 deploy --stage dev
+```
+
+The deploy outputs `apiUrl`. Use that value plus `/api/v1` in `apps/customer-web/config.js` before deploying the static web client.
 
 ## Validation
 

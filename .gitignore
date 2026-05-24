@@ -8,6 +8,9 @@ dist/
 build/
 out/
 .next/
+.sst/
+sst-env.d.ts
+**/sst-env.d.ts
 
 # coverage
 coverage/
@@ -26,3 +29,6 @@ yarn-error.log*
 # OS/editor files
 .DS_Store
 *.tsbuildinfo
+
+# local notes
+ASSIGNMENT_TRACKER.md
