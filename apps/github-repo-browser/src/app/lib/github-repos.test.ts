@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getGithubReposPage, parseGitHubLinkHeader } from "./github-repos";
-import { getPageHref, getPaginationItems, parsePageParam } from "./pagination";
+import {
+  getPageHref,
+  getPaginationItems,
+  getRepoRange,
+  parsePageParam,
+} from "./pagination";
 
 const linkHeader =
   '<https://api.github.com/orgs/github/repos?sort=name&per_page=10&page=2>; rel="next", ' +
@@ -18,6 +23,13 @@ describe("github repo helpers", () => {
     expect(parsePageParam(["3", "4"])).toBe(3);
     expect(getPageHref(1)).toBe("/");
     expect(getPageHref(4)).toBe("/?page=4");
+  });
+
+  it("formats repository ranges", () => {
+    expect(getRepoRange(1, 10)).toBe("1-10");
+    expect(getRepoRange(3, 10)).toBe("21-30");
+    expect(getRepoRange(3, 4)).toBe("21-24");
+    expect(getRepoRange(9999, 0)).toBe("0");
   });
 
   it("reads pagination links from GitHub link headers", () => {

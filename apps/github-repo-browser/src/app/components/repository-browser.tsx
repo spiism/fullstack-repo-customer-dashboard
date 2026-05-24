@@ -1,5 +1,5 @@
 import type { GitHubReposResult } from "../lib/github-repos";
-import { getPageHref, PAGE_SIZE } from "../lib/pagination";
+import { getPageHref, getRepoRange } from "../lib/pagination";
 import { PaginationControls } from "./pagination-controls";
 import { RepositoryListItem } from "./repository-list-item";
 import { RepositoryResultsHeader } from "./repository-results-header";
@@ -9,13 +9,6 @@ type RepositoryBrowserProps = {
   currentPage: number;
   result: GitHubReposResult;
 };
-
-function getRepoRange(page: number, repoCount: number) {
-  const first = (page - 1) * PAGE_SIZE + 1;
-  const last = first + Math.max(repoCount - 1, 0);
-
-  return repoCount > 0 ? `${first}-${last}` : "0";
-}
 
 export function RepositoryBrowser({
   currentPage,
